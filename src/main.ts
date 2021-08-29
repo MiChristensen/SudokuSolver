@@ -244,7 +244,7 @@ function showSolution(solutionIndex: number) {
 
 window.onload = main;
 
-//TASK Test 
+
 //TASK Vis antal løsninger der er fundet 
 //TASK Fix speed - skal ikke vise værdien og skal bruge en funktion der accelererer hurtigere
 //TASK Gør board read-only når algoritme er i gang
