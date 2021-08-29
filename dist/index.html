@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="src/speed.js" defer> </script>
+    <script src="src/main.js" defer></script>
+    <script src="src/interactivity.js" defer></script>
+    <script src="src/helpers.js" defer></script>
+    <script src="test/test.js" defer></script>
+    <script src="src/dynamic_styles.js" defer></script>
+    <script src="src/logging.js" defer></script>
+    <link rel="stylesheet" href="styles.css">
+
+    <title>Sudoku Solver</title>
+</head>
+
+<body>
+    <header>
+        <h1>Sudoku Solver Simulation</h1>
+    </header>
+    <div id="game">
+        <div id="infoSection">
+            <h2 id="speedHeader"> </h2>
+            <input type="range" min=0 max=1000 value=0 id="speedSlider" oninput="speedSliderOnInput()">
+
+            <div id="radioContainer">
+                <p>Show Algorithm?</p>
+                <input type="radio" id="doShowAlgorithm" name="showAlgorithmRadio" value="doShow" checked="true">
+                <label for="doShowAlgorithm">Yes</label>
+
+                <input type="radio" id="doNotShowAlgorithm" name="showAlgorithmRadio" value="doNotShow">
+                <label for="doNotShowAlgorithm">No</label>
+            </div>
+
+            <input id="solveButton" type="button" value="Solve" onclick="solveClick()">
+
+        </div>
+        <div id="board">
+            <table>
+                <tbody>
+                    <tr class="row">
+                        <!-- Row 0 -->
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                    </tr>
+                    <tr class="row">
+                        <!-- Row 1 -->
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                    </tr>
+                    <tr class="row endOfBoxRow">
+                        <!-- Row 2 -->
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                    </tr>
+                    <tr class="row">
+                        <!-- Row 3 -->
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                    </tr>
+                    <tr class="row">
+                        <!-- Row 4 -->
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                    </tr>
+                    <tr class="row endOfBoxRow">
+                        <!-- Row 5 -->
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                    </tr>
+                    <tr class="row">
+                        <!-- Row 6 -->
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                    </tr>
+                    <tr class="row">
+                        <!-- Row 7 -->
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                    </tr>
+                    <tr class="row endOfBoxRow">
+                        <!-- Row 8 -->
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                        <td><input type="text" class="cell"> </input></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</body>
+
+</html>
