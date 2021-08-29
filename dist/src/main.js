@@ -286,7 +286,8 @@ function showSolution(solutionIndex) {
     updateHTMLWithBoard(solutions[solutionIndex]);
 }
 window.onload = main;
-//TASK Vis antal løsninger der er fundet
+//TASK Test 
+//TASK Vis antal løsninger der er fundet 
 //TASK Fix speed - skal ikke vise værdien og skal bruge en funktion der accelererer hurtigere
 //TASK Gør board read-only når algoritme er i gang
 //TASK Lav 4 generate knapper "Easy, medium, hard, random"
