@@ -258,5 +258,4 @@ window.onload = main;
 //FEATURE Generate API
 //FEATURE Generelt design af side
 //FEATURE Opsætning af hjemmeside
-//FEATURE Opsætning af GIT
 

@@ -1,3 +1,5 @@
+import clone from "just-clone";
+
 /**
  * Returns the HTMLCell corresponding to the parameter cell
  * @param cell the cell to which we want to find the corresponding HTMLCell
@@ -144,3 +146,6 @@ function validateAndColorAllCells() {
     solveButton.disabled = existsInvalidCell? true : false;
 }
 
+function cloneBoard(board: Board): Board {
+    return clone(board);
+}
