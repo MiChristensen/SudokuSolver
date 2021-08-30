@@ -1,19 +1,20 @@
-const SUGOKU_URL: string = "https://sugoku.herokuapp.com/board";
-const PRINT_INFO = false;
-const BOARD_SIZE = 9;
-const rows = document.getElementsByClassName("row");
-const cells = document.getElementsByClassName("cell") as HTMLCollectionOf<HTMLCell>
-const GREEN_COLOR = "#8cf91f"
-const RED_COLOR = "#e63946"
-const GREY_COLOR_FIXED = "#828282"
-const GREY_COLOR_FOCUS = "bdbdbd"
-const YELLOW_COLOR = "#ffff33"
-const WHITE_COLOR = "white"
-let board: Board;
+//#region imports
+import { GetNextRowAndCol, initBoard, isValidBox, isValidCol, isValidRow, setBoardValue, setHTMLValue, updateBoardWithHTMLInput, updateHTMLWithBoard } from "./helpers";
+import { SUGOKU_URL, cells } from "./constants";
+import { GREEN_COLOR, GREY_COLOR_FIXED, WHITE_COLOR, YELLOW_COLOR } from "./colors"
+import { printBoard, logStatus } from "./logging";
+import { setVerticalBorders, setHTMLBackgroundsUsingBoard, setCellBackgroundColor } from "./dynamic_styles";
+import { processHTMLCells, makeBoardReadOnly } from "./interactivity";
+import { updateSpeedHTMLValue, updateInstantSolve, delay, currentSpeed } from "./speed";
+import clone from "just-clone";
+import { runTests } from "../test/test";
+//#endregion
+
+export let BOARD: Board;
+
 let solving: boolean = false;
 let noOfSolutions: number = 0;
 let solutions: Board[] = [];
-
 
 async function main() {
     // const preset = await getPreset(Difficulty.EASY);
@@ -29,7 +30,7 @@ async function main() {
         [0,0,1,0,0,0,0,0,0]
     ]
     processHTMLCells();
-    board = initBoard();
+    BOARD = initBoard();
     runTests();
     updateSpeedHTMLValue(currentSpeed)
     setVerticalBorders();
@@ -38,7 +39,7 @@ async function main() {
     updateBoardWithHTMLInput();
 }
 
-async function getPreset(difficulty: Difficulty) {
+async function fetchSugokuBoardAsync(difficulty: Difficulty) {
     return window.fetch(`${SUGOKU_URL}?difficulty=${difficulty}`)
         .then(response => response.json())
         .then(jsonObject => {
@@ -53,7 +54,7 @@ async function getPreset(difficulty: Difficulty) {
  * Uses the values in preset variable to fill innerHTML values in cells variable 
  * @param preset the number[][] preset 
  */
-function fillHTMLWithPreset(preset: number[][]) {
+export function fillHTMLWithPreset(preset: number[][]) {
     for (let i = 0; i < cells.length; i++) {
         let cell = cells[i] as HTMLCell
         const row: number = Math.floor(i / 9);
@@ -66,7 +67,7 @@ function fillHTMLWithPreset(preset: number[][]) {
 function solveClick() {
     //TASK disable solve when solving
     updateBoardWithHTMLInput();
-    printBoard(board);
+    printBoard(BOARD);
     makeBoardReadOnly();
     setHTMLBackgroundsUsingBoard();
     updateInstantSolve();
@@ -89,8 +90,8 @@ async function recursiveValidate(row: number, col: number, value: number) {
         logStatus("delay 1");
         await delay()
         noOfSolutions++;
-        console.dir(board)
-        solutions.push(board);
+        console.dir(BOARD)
+        solutions.push(clone(BOARD));
         //BUG Det er ikke board der skal pushes til solutions men en kopi heraf. Implementer en cloneBoard(board) metode, som returnerer en kopi af boarded. 
         showDoneAnimation();
         return;
@@ -98,7 +99,7 @@ async function recursiveValidate(row: number, col: number, value: number) {
 
     setCellBackgroundColor(row, col, YELLOW_COLOR)
     logStatus(`RecursiveValidate: (row, col, value): (${row}, ${col}, ${value})`);
-    const isFixed = board[row][col].fixed
+    const isFixed = BOARD[row][col].fixed
     const [nextRow, nextCol] = GetNextRowAndCol(row, col);
 
 
@@ -149,90 +150,10 @@ async function recursiveValidate(row: number, col: number, value: number) {
         setHTMLValue(row, col, 0);
         setCellBackgroundColor(row, col, WHITE_COLOR)
     }
-    printBoard(board);
+    printBoard(BOARD);
 }
 
-function setHTMLValue(row: number, col: number, value: number): void {
-    let cell = getHTMLCellFromRowCol(row, col)
-    cell.value = value == 0 ? "" : value.toString();
-    logStatus(`setHTMLValue: (row, col, value): (${row}, ${col}, ${value})`);
-}
 
-function setBoardValue(row: number, col: number, value: number): void {
-    if (board[row][col].fixed) {
-        throw new Error(`Tried to setCellValue of fixed cell with params row: ${row}, col: ${col}, value: ${value}`);
-    }
-    const newBoardValue = value == 0 ? NaN : value
-    logStatus(`setBoardValue: (row,col,value): (${row}, ${col}, ${value})`);
-    board[row][col].value = newBoardValue;
-}
-
-function isValidRow(row: number, col: number, value: number): boolean {
-    logFunctionStart("Row validation");
-    logStatus(`(row, col, value) = (${row}, ${col}, ${value})`);
-
-    for (let currentCol = 0; currentCol < BOARD_SIZE; currentCol++) {
-        if (currentCol == col) continue;
-        if (board[row][currentCol].value == value) {
-            logStatus("Row Validation: false");
-            logFunctionEnd("Row Validation");
-            return false;
-        }
-    }
-    logStatus("Row Validation: true");
-    logFunctionEnd("Row Validation");
-    return true;
-}
-
-function isValidCol(row: number, col: number, value: number): boolean {
-    logFunctionStart("Column Validation")
-    logStatus(`(row, col, value): (${row}, ${col}, ${value})`);
-
-    for (let currentRow = 0; currentRow < BOARD_SIZE; currentRow++) {
-        if (currentRow == row) continue;
-        if (board[currentRow][col].value == value) {
-            logStatus("Column validation: false");
-            logFunctionEnd("Column Validation");
-            return false;
-        }
-    }
-    logStatus("Column validation: true");
-    logFunctionEnd("Column Validation");
-    return true;
-}
-
-function isValidBox(row: number, col: number, value: number): boolean {
-    logFunctionStart(" Box validation")
-    logStatus(`(row, col, value) = (${row}, ${col}, ${value})`);
-    var currentRow = row - row % 3;
-    var nextHorizontalEdge = currentRow + 2;
-    var currentCol = col - col % 3;
-    var nextVerticalEdge = currentCol + 2;
-
-    while (currentRow <= nextHorizontalEdge && currentCol <= nextVerticalEdge) {
-        const boardValue = board[currentRow][currentCol].value
-        logStatus(`(row, NHE, col, NVE, boardValud, valueToValidate): (${currentRow}, ${nextHorizontalEdge}, ${currentCol}, ${nextVerticalEdge}, ${boardValue}, ${value})`);
-        const ignore = currentRow == row && currentCol == col
-        if (boardValue == value && !ignore) {
-            logStatus("Box validated: false");
-            logFunctionEnd("Box validation");
-            return false;
-        }
-
-        if (currentCol == nextVerticalEdge)
-        //Go to next row at left edge of current box
-        {
-            currentCol -= 2;
-            currentRow += 1;
-        }
-        else {
-            currentCol += 1;
-        }
-    }
-    logStatus("Box validated: true");
-    logFunctionEnd("Box validation")
-    return true;
-}
 
 function showDoneAnimation() {
     //TODO Vis, at algoritmen er færdig. Eventuelt tæl antal løsninger

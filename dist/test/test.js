@@ -1,5 +1,10 @@
 "use strict";
 // let fixedCellsTest: Set<[number, number]>
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.runTests = void 0;
+var helpers_1 = require("../src/helpers");
+var logging_1 = require("../src/logging");
+var main_1 = require("../src/main");
 function runTests() {
     setupTest();
     testIsValidRow();
@@ -10,6 +15,7 @@ function runTests() {
     //Setup board again
     // setupBoard();
 }
+exports.runTests = runTests;
 function setupTest() {
     var testPreset = [
         [0, 6, 8, /**/ 0, 0, 0, /**/ 3, 0, 0],
@@ -24,63 +30,63 @@ function setupTest() {
         [0, 0, 0, /**/ 4, 0, 7, /**/ 5, 0, 0],
         [0, 0, 0, /**/ 0, 1, 0, /**/ 0, 6, 0]
     ];
-    fillHTMLWithPreset(testPreset);
-    updateBoardWithHTMLInput();
+    main_1.fillHTMLWithPreset(testPreset);
+    helpers_1.updateBoardWithHTMLInput();
 }
 function testIsValidRow() {
     setupTest();
-    if (isValidRow(0, 0, 3) == true)
+    if (helpers_1.isValidRow(0, 0, 3) == true)
         testFailed();
     setupTest();
-    if (isValidRow(0, 5, 4) == false)
+    if (helpers_1.isValidRow(0, 5, 4) == false)
         testFailed();
     setupTest();
-    if (isValidRow(8, 4, 5) == false)
+    if (helpers_1.isValidRow(8, 4, 5) == false)
         testFailed();
 }
 function testIsValidCol() {
-    if (isValidCol(0, 3, 4))
+    if (helpers_1.isValidCol(0, 3, 4))
         testFailed();
-    if (isValidCol(8, 8, 3))
+    if (helpers_1.isValidCol(8, 8, 3))
         testFailed();
-    if (!isValidCol(4, 5, 5))
+    if (!helpers_1.isValidCol(4, 5, 5))
         testFailed();
-    if (!isValidCol(6, 0, 1))
+    if (!helpers_1.isValidCol(6, 0, 1))
         testFailed();
 }
 function testIsValidBox() {
-    if (isValidBox(3, 3, 6))
+    if (helpers_1.isValidBox(3, 3, 6))
         testFailed();
-    if (isValidBox(0, 0, 9))
+    if (helpers_1.isValidBox(0, 0, 9))
         testFailed();
-    if (!isValidBox(5, 0, 6))
+    if (!helpers_1.isValidBox(5, 0, 6))
         testFailed();
-    if (!isValidBox(8, 8, 1))
+    if (!helpers_1.isValidBox(8, 8, 1))
         testFailed();
 }
 function testSetCellValue() {
     setupTest();
-    setBoardValue(0, 0, 1);
-    setHTMLValue(0, 0, 1);
-    if (getHTMLValue(0, 0) != 1)
+    helpers_1.setBoardValue(0, 0, 1);
+    helpers_1.setHTMLValue(0, 0, 1);
+    if (helpers_1.getHTMLValue(0, 0) != 1)
         testFailed();
     setupTest();
-    setBoardValue(8, 8, 6);
-    setHTMLValue(8, 8, 6);
-    if (getHTMLValue(8, 8) != 6)
+    helpers_1.setBoardValue(8, 8, 6);
+    helpers_1.setHTMLValue(8, 8, 6);
+    if (helpers_1.getHTMLValue(8, 8) != 6)
         testFailed();
     setupTest();
     try {
-        setBoardValue(8, 4, 8);
-        setHTMLValue(8, 4, 8);
+        helpers_1.setBoardValue(8, 4, 8);
+        helpers_1.setHTMLValue(8, 4, 8);
     }
     catch (error) {
-        if (getHTMLValue(8, 4) != 1)
+        if (helpers_1.getHTMLValue(8, 4) != 1)
             testFailed();
     }
 }
 function allTestsPassed() {
-    logStatus("All tests passed");
+    logging_1.logStatus("All tests passed");
 }
 function testFailed() {
     alert("Test Failed");

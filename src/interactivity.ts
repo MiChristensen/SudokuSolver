@@ -1,6 +1,10 @@
+import { cells, BOARD_SIZE } from "./constants";
+import { convertCellNoToRowCol, updateBoardWithHTMLInput, validateAndColorAllCells, convertRowColToCellNo, getHTMLCellFromCell } from "./helpers";
+import { logStatus } from "./logging";
+import { BOARD } from "./main";
 
 //Gives every cell an index, a maxlenght = 1 and adds eventlistener.
-function processHTMLCells() {
+export function processHTMLCells() {
     for (let cellCounter = 0; cellCounter < cells.length; cellCounter++) {
         const cell = cells[cellCounter]
         cell.maxLength = 1
@@ -10,10 +14,10 @@ function processHTMLCells() {
     }
 }
 
-function cellInputEvent(event: Event) {
+export function cellInputEvent(event: Event) {
     const cell = event.target as HTMLCell;
     const [row, col] = convertCellNoToRowCol(cell.index);
-    if (parseInt(cell.value) == board[row][col].value) return;
+    if (parseInt(cell.value) == BOARD[row][col].value) return;
 
     updateBoardWithHTMLInput();
     validateAndColorAllCells();
@@ -25,7 +29,7 @@ function cellInputEvent(event: Event) {
  * key pressed
  * @param event KeyBoardEvent triggering this function
  */
-function cellKeyDownEvent(event: KeyboardEvent): void {
+export function cellKeyDownEvent(event: KeyboardEvent): void {
     const cell = event.target as HTMLCell
     const cellNo = cell.index;
     const [row, col] = convertCellNoToRowCol(cellNo)
@@ -89,7 +93,7 @@ function cellKeyDownEvent(event: KeyboardEvent): void {
  * @param {*} row the row of the cell currently selected
  * @param {*} col the col of the cell currently selected
  */
-function handleArrowUp(row: number, col: number) {
+export function handleArrowUp(row: number, col: number) {
     const isTopRow = row == 0;
     if (!isTopRow) {
         //Select cell above
@@ -107,7 +111,7 @@ function handleArrowUp(row: number, col: number) {
  * @param {*} row the row of the cell currently selected
  * @param {*} col the col of the cell currently selected
  */
-function handleArrowRight(row: number, col: number) {
+export function handleArrowRight(row: number, col: number) {
     const isRightMostColumn = col == BOARD_SIZE - 1;
     if (!isRightMostColumn) {
         //Select cell to the right
@@ -126,7 +130,7 @@ function handleArrowRight(row: number, col: number) {
  * @param {*} row the row of the cell currently selected
  * @param {*} col the col of the cell currently selected
  */
-function handleArrowDown(row: number, col: number) {
+export function handleArrowDown(row: number, col: number) {
     const isBottomRow = row == BOARD_SIZE - 1;
     if (!isBottomRow) {
         //Select cell below
@@ -144,7 +148,7 @@ function handleArrowDown(row: number, col: number) {
  * @param {*} row the row of the cell currently selected
  * @param {*} col the col of the cell currently selected
  */
-function handleArrowLeft(row: number, col: number) {
+export function handleArrowLeft(row: number, col: number) {
     const isLeftMostColumn = col == 0;
     if (!isLeftMostColumn) {
         //Select cell to the left
@@ -161,7 +165,7 @@ function handleArrowLeft(row: number, col: number) {
  * @param {*} inputString 
  * @returns 
  */
-function validateInput(inputString: string) {
+ export function validateInput(inputString: string) {
     const inputAsNumber = Number.parseInt(inputString)
     const isValidNumber = !!inputAsNumber && inputAsNumber != 0 && inputAsNumber <= 9
     logStatus(`validate input: ${inputString} => ${isValidNumber}`);
@@ -175,7 +179,7 @@ function validateInput(inputString: string) {
  * @param {*} cellIndex The index of the cell in question
  * @param {*} previousValue The previous value of the cell
  */
-function delayedReplace(cellIndex: number, previousValue: any) {
+ export function delayedReplace(cellIndex: number, previousValue: any) {
     const cell = cells[cellIndex]
     const newValue = cell.value;
     if (!validateInput(newValue)) {
@@ -184,8 +188,8 @@ function delayedReplace(cellIndex: number, previousValue: any) {
     }
 }
 
-function makeBoardReadOnly(): void {
-    board.forEach(row => {
+export function makeBoardReadOnly(): void {
+    BOARD.forEach(row => {
         row.forEach(cell => {
             const htmlCell = getHTMLCellFromCell(cell)
             htmlCell.disabled = true;

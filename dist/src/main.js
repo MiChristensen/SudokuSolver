@@ -35,18 +35,21 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var SUGOKU_URL = "https://sugoku.herokuapp.com/board";
-var PRINT_INFO = false;
-var BOARD_SIZE = 9;
-var rows = document.getElementsByClassName("row");
-var cells = document.getElementsByClassName("cell");
-var GREEN_COLOR = "#8cf91f";
-var RED_COLOR = "#e63946";
-var GREY_COLOR_FIXED = "#828282";
-var GREY_COLOR_FOCUS = "bdbdbd";
-var YELLOW_COLOR = "#ffff33";
-var WHITE_COLOR = "white";
-var board;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.fillHTMLWithPreset = exports.BOARD = void 0;
+//#region imports
+var helpers_1 = require("./helpers");
+var constants_1 = require("./constants");
+var colors_1 = require("./colors");
+var logging_1 = require("./logging");
+var dynamic_styles_1 = require("./dynamic_styles");
+var interactivity_1 = require("./interactivity");
+var speed_1 = require("./speed");
+var just_clone_1 = __importDefault(require("just-clone"));
+var test_1 = require("../test/test");
 var solving = false;
 var noOfSolutions = 0;
 var solutions = [];
@@ -65,22 +68,22 @@ function main() {
                 [0, 4, 7, 9, 2, 5, 0, 0, 1],
                 [0, 0, 1, 0, 0, 0, 0, 0, 0]
             ];
-            processHTMLCells();
-            board = initBoard();
-            runTests();
-            updateSpeedHTMLValue(currentSpeed);
-            setVerticalBorders();
+            interactivity_1.processHTMLCells();
+            exports.BOARD = helpers_1.initBoard();
+            test_1.runTests();
+            speed_1.updateSpeedHTMLValue(speed_1.currentSpeed);
+            dynamic_styles_1.setVerticalBorders();
             // setHTMLBackgroundsUsingBoard();
             fillHTMLWithPreset(preset);
-            updateBoardWithHTMLInput();
+            helpers_1.updateBoardWithHTMLInput();
             return [2 /*return*/];
         });
     });
 }
-function getPreset(difficulty) {
+function fetchSugokuBoardAsync(difficulty) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            return [2 /*return*/, window.fetch(SUGOKU_URL + "?difficulty=" + difficulty)
+            return [2 /*return*/, window.fetch(constants_1.SUGOKU_URL + "?difficulty=" + difficulty)
                     .then(function (response) { return response.json(); })
                     .then(function (jsonObject) {
                     var fetchedBoard = jsonObject.board;
@@ -94,22 +97,23 @@ function getPreset(difficulty) {
  * @param preset the number[][] preset
  */
 function fillHTMLWithPreset(preset) {
-    for (var i = 0; i < cells.length; i++) {
-        var cell = cells[i];
+    for (var i = 0; i < constants_1.cells.length; i++) {
+        var cell = constants_1.cells[i];
         var row = Math.floor(i / 9);
         var col = i % 9;
         //Replace "0"'s in preset with "" while filling html board
         cell.value = preset[row][col] == 0 ? "" : preset[row][col].toString();
     }
 }
+exports.fillHTMLWithPreset = fillHTMLWithPreset;
 function solveClick() {
     //TASK disable solve when solving
-    updateBoardWithHTMLInput();
-    printBoard(board);
-    makeBoardReadOnly();
-    setHTMLBackgroundsUsingBoard();
-    updateInstantSolve();
-    logStatus("Solving...");
+    helpers_1.updateBoardWithHTMLInput();
+    logging_1.printBoard(exports.BOARD);
+    interactivity_1.makeBoardReadOnly();
+    dynamic_styles_1.setHTMLBackgroundsUsingBoard();
+    speed_1.updateInstantSolve();
+    logging_1.logStatus("Solving...");
     startSolve();
 }
 //Starts the actual algorithm solving the sudoku
@@ -126,167 +130,91 @@ function recursiveValidate(row, col, value) {
             switch (_b.label) {
                 case 0:
                     if (!(row == 9)) return [3 /*break*/, 2];
-                    logStatus("delay 1");
-                    return [4 /*yield*/, delay()];
+                    logging_1.logStatus("delay 1");
+                    return [4 /*yield*/, speed_1.delay()];
                 case 1:
                     _b.sent();
                     noOfSolutions++;
-                    console.dir(board);
-                    solutions.push(board);
+                    console.dir(exports.BOARD);
+                    solutions.push(just_clone_1.default(exports.BOARD));
                     //BUG Det er ikke board der skal pushes til solutions men en kopi heraf. Implementer en cloneBoard(board) metode, som returnerer en kopi af boarded. 
                     showDoneAnimation();
                     return [2 /*return*/];
                 case 2:
-                    setCellBackgroundColor(row, col, YELLOW_COLOR);
-                    logStatus("RecursiveValidate: (row, col, value): (" + row + ", " + col + ", " + value + ")");
-                    isFixed = board[row][col].fixed;
-                    _a = GetNextRowAndCol(row, col), nextRow = _a[0], nextCol = _a[1];
+                    dynamic_styles_1.setCellBackgroundColor(row, col, colors_1.YELLOW_COLOR);
+                    logging_1.logStatus("RecursiveValidate: (row, col, value): (" + row + ", " + col + ", " + value + ")");
+                    isFixed = exports.BOARD[row][col].fixed;
+                    _a = helpers_1.GetNextRowAndCol(row, col), nextRow = _a[0], nextCol = _a[1];
                     if (!isFixed) return [3 /*break*/, 6];
-                    logStatus("delay 2");
-                    return [4 /*yield*/, delay()];
+                    logging_1.logStatus("delay 2");
+                    return [4 /*yield*/, speed_1.delay()];
                 case 3:
                     _b.sent();
-                    setCellBackgroundColor(row, col, GREY_COLOR_FIXED);
+                    dynamic_styles_1.setCellBackgroundColor(row, col, colors_1.GREY_COLOR_FIXED);
                     return [4 /*yield*/, recursiveValidate(nextRow, nextCol, 1)];
                 case 4:
                     _b.sent();
-                    setCellBackgroundColor(row, col, YELLOW_COLOR);
-                    logStatus("delay 3");
-                    return [4 /*yield*/, delay()];
+                    dynamic_styles_1.setCellBackgroundColor(row, col, colors_1.YELLOW_COLOR);
+                    logging_1.logStatus("delay 3");
+                    return [4 /*yield*/, speed_1.delay()];
                 case 5:
                     _b.sent();
-                    setCellBackgroundColor(row, col, GREY_COLOR_FIXED);
+                    dynamic_styles_1.setCellBackgroundColor(row, col, colors_1.GREY_COLOR_FIXED);
                     return [2 /*return*/];
                 case 6:
-                    setHTMLValue(row, col, value);
-                    isValidValue = isValidRow(row, col, value) && isValidCol(row, col, value) &&
-                        isValidBox(row, col, value);
+                    helpers_1.setHTMLValue(row, col, value);
+                    isValidValue = helpers_1.isValidRow(row, col, value) && helpers_1.isValidCol(row, col, value) &&
+                        helpers_1.isValidBox(row, col, value);
                     if (!isValidValue) return [3 /*break*/, 9];
-                    logStatus("delay 4");
-                    return [4 /*yield*/, delay()];
+                    logging_1.logStatus("delay 4");
+                    return [4 /*yield*/, speed_1.delay()];
                 case 7:
                     _b.sent();
-                    setCellBackgroundColor(row, col, GREEN_COLOR);
-                    setBoardValue(row, col, value);
-                    setHTMLValue(row, col, value);
+                    dynamic_styles_1.setCellBackgroundColor(row, col, colors_1.GREEN_COLOR);
+                    helpers_1.setBoardValue(row, col, value);
+                    helpers_1.setHTMLValue(row, col, value);
                     return [4 /*yield*/, recursiveValidate(nextRow, nextCol, 1)];
                 case 8:
                     _b.sent();
                     _b.label = 9;
                 case 9:
-                    setCellBackgroundColor(row, col, YELLOW_COLOR);
+                    dynamic_styles_1.setCellBackgroundColor(row, col, colors_1.YELLOW_COLOR);
                     if (!(value != 9)) return [3 /*break*/, 12];
-                    logStatus("delay 5");
-                    return [4 /*yield*/, delay()];
+                    logging_1.logStatus("delay 5");
+                    return [4 /*yield*/, speed_1.delay()];
                 case 10:
                     _b.sent();
-                    setBoardValue(row, col, value);
-                    setHTMLValue(row, col, value);
+                    helpers_1.setBoardValue(row, col, value);
+                    helpers_1.setHTMLValue(row, col, value);
                     //Try next value in this cell
-                    logStatus(value + " not correct, trying next value");
+                    logging_1.logStatus(value + " not correct, trying next value");
                     return [4 /*yield*/, recursiveValidate(row, col, value + 1)];
                 case 11:
                     _b.sent();
                     return [2 /*return*/];
                 case 12:
-                    logStatus("Delay 6");
-                    return [4 /*yield*/, delay()];
+                    logging_1.logStatus("Delay 6");
+                    return [4 /*yield*/, speed_1.delay()];
                 case 13:
                     _b.sent();
-                    setBoardValue(row, col, 0);
-                    setHTMLValue(row, col, 0);
-                    setCellBackgroundColor(row, col, WHITE_COLOR);
+                    helpers_1.setBoardValue(row, col, 0);
+                    helpers_1.setHTMLValue(row, col, 0);
+                    dynamic_styles_1.setCellBackgroundColor(row, col, colors_1.WHITE_COLOR);
                     _b.label = 14;
                 case 14:
-                    printBoard(board);
+                    logging_1.printBoard(exports.BOARD);
                     return [2 /*return*/];
             }
         });
     });
 }
-function setHTMLValue(row, col, value) {
-    var cell = getHTMLCellFromRowCol(row, col);
-    cell.value = value == 0 ? "" : value.toString();
-    logStatus("setHTMLValue: (row, col, value): (" + row + ", " + col + ", " + value + ")");
-}
-function setBoardValue(row, col, value) {
-    if (board[row][col].fixed) {
-        throw new Error("Tried to setCellValue of fixed cell with params row: " + row + ", col: " + col + ", value: " + value);
-    }
-    var newBoardValue = value == 0 ? NaN : value;
-    logStatus("setBoardValue: (row,col,value): (" + row + ", " + col + ", " + value + ")");
-    board[row][col].value = newBoardValue;
-}
-function isValidRow(row, col, value) {
-    logFunctionStart("Row validation");
-    logStatus("(row, col, value) = (" + row + ", " + col + ", " + value + ")");
-    for (var currentCol = 0; currentCol < BOARD_SIZE; currentCol++) {
-        if (currentCol == col)
-            continue;
-        if (board[row][currentCol].value == value) {
-            logStatus("Row Validation: false");
-            logFunctionEnd("Row Validation");
-            return false;
-        }
-    }
-    logStatus("Row Validation: true");
-    logFunctionEnd("Row Validation");
-    return true;
-}
-function isValidCol(row, col, value) {
-    logFunctionStart("Column Validation");
-    logStatus("(row, col, value): (" + row + ", " + col + ", " + value + ")");
-    for (var currentRow = 0; currentRow < BOARD_SIZE; currentRow++) {
-        if (currentRow == row)
-            continue;
-        if (board[currentRow][col].value == value) {
-            logStatus("Column validation: false");
-            logFunctionEnd("Column Validation");
-            return false;
-        }
-    }
-    logStatus("Column validation: true");
-    logFunctionEnd("Column Validation");
-    return true;
-}
-function isValidBox(row, col, value) {
-    logFunctionStart(" Box validation");
-    logStatus("(row, col, value) = (" + row + ", " + col + ", " + value + ")");
-    var currentRow = row - row % 3;
-    var nextHorizontalEdge = currentRow + 2;
-    var currentCol = col - col % 3;
-    var nextVerticalEdge = currentCol + 2;
-    while (currentRow <= nextHorizontalEdge && currentCol <= nextVerticalEdge) {
-        var boardValue = board[currentRow][currentCol].value;
-        logStatus("(row, NHE, col, NVE, boardValud, valueToValidate): (" + currentRow + ", " + nextHorizontalEdge + ", " + currentCol + ", " + nextVerticalEdge + ", " + boardValue + ", " + value + ")");
-        var ignore = currentRow == row && currentCol == col;
-        if (boardValue == value && !ignore) {
-            logStatus("Box validated: false");
-            logFunctionEnd("Box validation");
-            return false;
-        }
-        if (currentCol == nextVerticalEdge) 
-        //Go to next row at left edge of current box
-        {
-            currentCol -= 2;
-            currentRow += 1;
-        }
-        else {
-            currentCol += 1;
-        }
-    }
-    logStatus("Box validated: true");
-    logFunctionEnd("Box validation");
-    return true;
-}
 function showDoneAnimation() {
     //TODO Vis, at algoritmen er færdig. Eventuelt tæl antal løsninger
 }
 function showSolution(solutionIndex) {
-    updateHTMLWithBoard(solutions[solutionIndex]);
+    helpers_1.updateHTMLWithBoard(solutions[solutionIndex]);
 }
 window.onload = main;
-//TASK Test 
 //TASK Vis antal løsninger der er fundet 
 //TASK Fix speed - skal ikke vise værdien og skal bruge en funktion der accelererer hurtigere
 //TASK Gør board read-only når algoritme er i gang
@@ -300,5 +228,4 @@ window.onload = main;
 //FEATURE Generate API
 //FEATURE Generelt design af side
 //FEATURE Opsætning af hjemmeside
-//FEATURE Opsætning af GIT
 //# sourceMappingURL=main.js.map

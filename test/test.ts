@@ -1,6 +1,10 @@
 // let fixedCellsTest: Set<[number, number]>
 
-function runTests() {
+import { updateBoardWithHTMLInput, isValidRow, isValidCol, isValidBox, getHTMLValue, setBoardValue, setHTMLValue } from "../src/helpers";
+import { logStatus } from "../src/logging";
+import { fillHTMLWithPreset } from "../src/main";
+
+export function runTests() {
     setupTest();
     testIsValidRow();
     testIsValidCol();

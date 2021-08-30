@@ -1,9 +1,11 @@
+import { logStatus } from "./logging";
+
 const DEFAULT_SPEED = getCurrentSpeedSliderValue();
+export let currentSpeed: number = DEFAULT_SPEED
 const speedSlider = document.querySelector("#speedSlider") as HTMLInputElement
-let currentSpeed: number = DEFAULT_SPEED
 let instantSolve: boolean;
 
-async function delay() {
+export async function delay() {
     if (instantSolve) return;
     return new Promise(res => {
         setTimeout(res, currentSpeed)
@@ -13,7 +15,7 @@ async function delay() {
 /**
  * Sets the instantSolve variable depending on which "Solve Algorithm Yes/No" radio button is currently checked 
  */
-function updateInstantSolve(): void {
+ export function updateInstantSolve(): void {
     const doNotShowAlgorithm = (document.querySelector("#doNotShowAlgorithm") as HTMLInputElement).checked
     logStatus(`setting instantSolve to: ${doNotShowAlgorithm}`)
     instantSolve = doNotShowAlgorithm
@@ -25,7 +27,7 @@ function setSpeed(newSpeed: number) {
     currentSpeed = newSpeed
 }
 
-function updateSpeedHTMLValue(newSpeed: number) {
+export function updateSpeedHTMLValue(newSpeed: number) {
     // logStatus(`Updating speed HTML Value to: ${newSpeed}`)
     let prefix: string = "Speed:";
     (document.querySelector("#speedHeader") as HTMLElement).innerHTML = `${prefix} ${newSpeed}`

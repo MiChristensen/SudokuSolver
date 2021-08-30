@@ -1,15 +1,20 @@
 import clone from "just-clone";
+import { RED_COLOR } from "./colors";
+import { cells, BOARD_SIZE } from "./constants";
+import { setCellBackgroundColor } from "./dynamic_styles";
+import { logFunctionEnd, logFunctionStart, logStatus, printBoard } from "./logging";
+import { BOARD } from "./main";
 
 /**
  * Returns the HTMLCell corresponding to the parameter cell
  * @param cell the cell to which we want to find the corresponding HTMLCell
  * @returns the corresponding HTMLCell
  */
-function getHTMLCellFromCell(cell: Cell): HTMLCell {
+export function getHTMLCellFromCell(cell: Cell): HTMLCell {
     return cells[convertRowColToCellNo(cell.row, cell.col)] as HTMLCell
 }
 
-function getHTMLCellFromRowCol(row: number, col: number): HTMLCell {
+export function getHTMLCellFromRowCol(row: number, col: number): HTMLCell {
     const cellNo = convertRowColToCellNo(row, col);
     return cells[cellNo] as HTMLCell
 }
@@ -18,7 +23,7 @@ function getHTMLCellFromRowCol(row: number, col: number): HTMLCell {
  * @param cellNo cell number (index) to convert
  * @returns the (row, col) coordinate
  */
-function convertCellNoToRowCol(cellNo: number): [number, number] {
+export function convertCellNoToRowCol(cellNo: number): [number, number] {
     const row: number = Math.floor(cellNo / BOARD_SIZE);
     const col: number = cellNo % BOARD_SIZE;
     return [row, col];
@@ -31,7 +36,7 @@ function convertCellNoToRowCol(cellNo: number): [number, number] {
  * @param col The current column
  * @returns The (row, col) coordinate
  */
-function GetNextRowAndCol(row: number, col: number): [number, number] {
+export function GetNextRowAndCol(row: number, col: number): [number, number] {
     let newRow = row;
     let newCol = col;
     if (col < BOARD_SIZE - 1) {
@@ -49,12 +54,12 @@ function GetNextRowAndCol(row: number, col: number): [number, number] {
  * @param col the column of the cell
  * @returns the index (cell number) of the 
  */
-function convertRowColToCellNo(row: number, col: number): number {
+export function convertRowColToCellNo(row: number, col: number): number {
     return row * BOARD_SIZE + col;
 }
 
 //Returns the value inside the HTMLCell with given row and col as a number
-function getHTMLValue(row: number, col: number): number {
+export function getHTMLValue(row: number, col: number): number {
     const cellNo = convertRowColToCellNo(row, col);
     const value = parseInt((cells[cellNo] as HTMLCell).value);
     return value
@@ -63,10 +68,10 @@ function getHTMLValue(row: number, col: number): number {
 /** Uses values in cells variable to create cells in board variable
  * @returns the board variable
  */
-function updateBoardWithHTMLInput() {
+export function updateBoardWithHTMLInput() {
     for (let currentRow = 0; currentRow < BOARD_SIZE; currentRow++) {
         for (let currentCol = 0; currentCol < BOARD_SIZE; currentCol++) {
-            const cell = cells[convertRowColToCellNo(currentRow,currentCol)]
+            const cell = cells[convertRowColToCellNo(currentRow, currentCol)]
             const currentValueNumber: number = Number.parseInt(cell.value);
             let updatedCell: Cell = {
                 row: currentRow,
@@ -74,16 +79,16 @@ function updateBoardWithHTMLInput() {
                 value: currentValueNumber,
                 fixed: cell.value ? true : false
             }
-            board[currentRow][currentCol] = updatedCell
+            BOARD[currentRow][currentCol] = updatedCell
         }
     }
-    printBoard(board)
+    printBoard(BOARD)
 }
 
 /** Updates the HTML board with the values in the argument board.
  * @param board The Board to show in the html board
  */
-function updateHTMLWithBoard(board: Board) {
+export function updateHTMLWithBoard(board: Board) {
     for (let currentRow = 0; currentRow < BOARD_SIZE; currentRow++) {
         for (let currentCol = 0; currentCol < BOARD_SIZE; currentCol++) {
             const cell = board[currentRow][currentCol]
@@ -96,7 +101,7 @@ function updateHTMLWithBoard(board: Board) {
 /** Returns a board with 0 in all cells.
  * @returns Board with 0 in all cells
  */
-function initBoard(): Cell[][] {
+export function initBoard(): Cell[][] {
     let board: Cell[][] = [];
     let cellsIndex: number = 0;
     for (let currentRow = 0; currentRow < BOARD_SIZE; currentRow++) {
@@ -119,7 +124,7 @@ function initBoard(): Cell[][] {
  * For every cell, validate the value in this cell and color 
  * the cell red if invalid or white (aka. "") if valid
  */
-function validateAndColorAllCells() {
+export function validateAndColorAllCells() {
     const solveButton = document.getElementById("solveButton") as HTMLInputElement;
     let existsInvalidCell = false;
 
@@ -143,9 +148,91 @@ function validateAndColorAllCells() {
         else setCellBackgroundColor(currentRow, currentCol, "")
     })
 
-    solveButton.disabled = existsInvalidCell? true : false;
+    solveButton.disabled = existsInvalidCell ? true : false;
 }
 
-function cloneBoard(board: Board): Board {
+export function cloneBoard(board: Board): Board {
     return clone(board);
+}
+
+export function isValidRow(row: number, col: number, value: number): boolean {
+    logFunctionStart("Row validation");
+    logStatus(`(row, col, value) = (${row}, ${col}, ${value})`);
+
+    for (let currentCol = 0; currentCol < BOARD_SIZE; currentCol++) {
+        if (currentCol == col) continue;
+        if (BOARD[row][currentCol].value == value) {
+            logStatus("Row Validation: false");
+            logFunctionEnd("Row Validation");
+            return false;
+        }
+    }
+    logStatus("Row Validation: true");
+    logFunctionEnd("Row Validation");
+    return true;
+}
+
+export function isValidCol(row: number, col: number, value: number): boolean {
+    logFunctionStart("Column Validation")
+    logStatus(`(row, col, value): (${row}, ${col}, ${value})`);
+
+    for (let currentRow = 0; currentRow < BOARD_SIZE; currentRow++) {
+        if (currentRow == row) continue;
+        if (BOARD[currentRow][col].value == value) {
+            logStatus("Column validation: false");
+            logFunctionEnd("Column Validation");
+            return false;
+        }
+    }
+    logStatus("Column validation: true");
+    logFunctionEnd("Column Validation");
+    return true;
+}
+
+export function isValidBox(row: number, col: number, value: number): boolean {
+    logFunctionStart(" Box validation")
+    logStatus(`(row, col, value) = (${row}, ${col}, ${value})`);
+    var currentRow = row - row % 3;
+    var nextHorizontalEdge = currentRow + 2;
+    var currentCol = col - col % 3;
+    var nextVerticalEdge = currentCol + 2;
+
+    while (currentRow <= nextHorizontalEdge && currentCol <= nextVerticalEdge) {
+        const boardValue = BOARD[currentRow][currentCol].value
+        logStatus(`(row, NHE, col, NVE, boardValud, valueToValidate): (${currentRow}, ${nextHorizontalEdge}, ${currentCol}, ${nextVerticalEdge}, ${boardValue}, ${value})`);
+        const ignore = currentRow == row && currentCol == col
+        if (boardValue == value && !ignore) {
+            logStatus("Box validated: false");
+            logFunctionEnd("Box validation");
+            return false;
+        }
+
+        if (currentCol == nextVerticalEdge)
+        //Go to next row at left edge of current box
+        {
+            currentCol -= 2;
+            currentRow += 1;
+        }
+        else {
+            currentCol += 1;
+        }
+    }
+    logStatus("Box validated: true");
+    logFunctionEnd("Box validation")
+    return true;
+}
+
+export function setHTMLValue(row: number, col: number, value: number): void {
+    let cell = getHTMLCellFromRowCol(row, col)
+    cell.value = value == 0 ? "" : value.toString();
+    logStatus(`setHTMLValue: (row, col, value): (${row}, ${col}, ${value})`);
+}
+
+export function setBoardValue(row: number, col: number, value: number): void {
+    if (BOARD[row][col].fixed) {
+        throw new Error(`Tried to setCellValue of fixed cell with params row: ${row}, col: ${col}, value: ${value}`);
+    }
+    const newBoardValue = value == 0 ? NaN : value
+    logStatus(`setBoardValue: (row,col,value): (${row}, ${col}, ${value})`);
+    BOARD[row][col].value = newBoardValue;
 }

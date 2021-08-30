@@ -35,9 +35,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.updateSpeedHTMLValue = exports.updateInstantSolve = exports.delay = exports.currentSpeed = void 0;
+var logging_1 = require("./logging");
 var DEFAULT_SPEED = getCurrentSpeedSliderValue();
+exports.currentSpeed = DEFAULT_SPEED;
 var speedSlider = document.querySelector("#speedSlider");
-var currentSpeed = DEFAULT_SPEED;
 var instantSolve;
 function delay() {
     return __awaiter(this, void 0, void 0, function () {
@@ -45,29 +48,32 @@ function delay() {
             if (instantSolve)
                 return [2 /*return*/];
             return [2 /*return*/, new Promise(function (res) {
-                    setTimeout(res, currentSpeed);
+                    setTimeout(res, exports.currentSpeed);
                 })];
         });
     });
 }
+exports.delay = delay;
 /**
  * Sets the instantSolve variable depending on which "Solve Algorithm Yes/No" radio button is currently checked
  */
 function updateInstantSolve() {
     var doNotShowAlgorithm = document.querySelector("#doNotShowAlgorithm").checked;
-    logStatus("setting instantSolve to: " + doNotShowAlgorithm);
+    logging_1.logStatus("setting instantSolve to: " + doNotShowAlgorithm);
     instantSolve = doNotShowAlgorithm;
 }
+exports.updateInstantSolve = updateInstantSolve;
 function setSpeed(newSpeed) {
-    logStatus("Setting new speed to: " + newSpeed);
+    logging_1.logStatus("Setting new speed to: " + newSpeed);
     updateSpeedHTMLValue(newSpeed);
-    currentSpeed = newSpeed;
+    exports.currentSpeed = newSpeed;
 }
 function updateSpeedHTMLValue(newSpeed) {
     // logStatus(`Updating speed HTML Value to: ${newSpeed}`)
     var prefix = "Speed:";
     document.querySelector("#speedHeader").innerHTML = prefix + " " + newSpeed;
 }
+exports.updateSpeedHTMLValue = updateSpeedHTMLValue;
 speedSlider.oninput = function () {
     setSpeed(getCurrentSpeedSliderValue());
 };

@@ -2,9 +2,15 @@
   "name": "sudoku-solver",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "html:copy": "copyfiles -u 1 src/**.html dist/",
+    "css:copy": "copyfiles -u 1 src/**.css dist/",
+    "bundlejs": "browserify dist/src/main.js -o dist/bundle.js",
+    "magic": "",
+    "html:watch": "nodemon --ignore node_modules --ignore dist --watch src -e html, css -x \"npm run html:copy && npm run css:copy\"",
+    "start": "concurrently \"npm run html:watch\" \"npm run compile\" \"npm run magic\""
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +21,7 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
+    "browserify": "^17.0.0",
     "jquery": "^3.6.0",
     "just-clone": "^3.2.1"
   }

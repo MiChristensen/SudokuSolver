@@ -1,22 +1,26 @@
-function logStatus(msg: string) {
+import { BOARD_SIZE } from "./constants";
+
+export const PRINT_INFO = false;
+
+export function logStatus(msg: string) {
     if (PRINT_INFO) console.log(msg);
 }
 
-function logFunctionStart(functionName: string) {
+export function logFunctionStart(functionName: string) {
     if(PRINT_INFO) {
         console.log("\n");   
         console.log(`==========================  ${functionName}  ==========================`);
     }
 }
 
-function logFunctionEnd(functionName: string) {
+export function logFunctionEnd(functionName: string) {
     if(PRINT_INFO) {
         console.log(`==========================  End of ${functionName}  ==========================`);
         console.log("\n");
     }
 }
 
-function printBoard(board: Board): void {
+export function printBoard(board: Board): void {
     logFunctionStart("Printing board")
     for (let row = 0; row < BOARD_SIZE; row++) {
         let rowString = ""

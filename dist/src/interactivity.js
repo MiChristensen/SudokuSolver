@@ -1,23 +1,31 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.makeBoardReadOnly = exports.delayedReplace = exports.validateInput = exports.handleArrowLeft = exports.handleArrowDown = exports.handleArrowRight = exports.handleArrowUp = exports.cellKeyDownEvent = exports.cellInputEvent = exports.processHTMLCells = void 0;
+var constants_1 = require("./constants");
+var helpers_1 = require("./helpers");
+var logging_1 = require("./logging");
+var main_1 = require("./main");
 //Gives every cell an index, a maxlenght = 1 and adds eventlistener.
 function processHTMLCells() {
-    for (var cellCounter = 0; cellCounter < cells.length; cellCounter++) {
-        var cell = cells[cellCounter];
+    for (var cellCounter = 0; cellCounter < constants_1.cells.length; cellCounter++) {
+        var cell = constants_1.cells[cellCounter];
         cell.maxLength = 1;
         cell.addEventListener("keydown", cellKeyDownEvent);
         cell.addEventListener("input", cellInputEvent);
         cell.index = cellCounter;
     }
 }
+exports.processHTMLCells = processHTMLCells;
 function cellInputEvent(event) {
     var cell = event.target;
-    var _a = convertCellNoToRowCol(cell.index), row = _a[0], col = _a[1];
-    if (parseInt(cell.value) == board[row][col].value)
+    var _a = helpers_1.convertCellNoToRowCol(cell.index), row = _a[0], col = _a[1];
+    if (parseInt(cell.value) == main_1.BOARD[row][col].value)
         return;
-    updateBoardWithHTMLInput();
-    validateAndColorAllCells();
+    helpers_1.updateBoardWithHTMLInput();
+    helpers_1.validateAndColorAllCells();
     cell.select();
 }
+exports.cellInputEvent = cellInputEvent;
 /** Checks which key has been pressed and executes logik depending on the
  * key pressed
  * @param event KeyBoardEvent triggering this function
@@ -25,7 +33,7 @@ function cellInputEvent(event) {
 function cellKeyDownEvent(event) {
     var cell = event.target;
     var cellNo = cell.index;
-    var _a = convertCellNoToRowCol(cellNo), row = _a[0], col = _a[1];
+    var _a = helpers_1.convertCellNoToRowCol(cellNo), row = _a[0], col = _a[1];
     switch (event.key) {
         case 'ArrowUp': {
             handleArrowUp(row, col);
@@ -58,8 +66,8 @@ function cellKeyDownEvent(event) {
         case 'Backspace':
         case 'Delete': {
             cell.value = "";
-            updateBoardWithHTMLInput();
-            validateAndColorAllCells();
+            helpers_1.updateBoardWithHTMLInput();
+            helpers_1.validateAndColorAllCells();
         }
         default: {
             cell.select();
@@ -68,15 +76,16 @@ function cellKeyDownEvent(event) {
                 event.preventDefault();
             }
             // if(!isValidBox(row,col,cell.value)))
-            var previousValue = cells[cellNo].value;
+            var previousValue = constants_1.cells[cellNo].value;
             //Combined values such as pressing '~' + 'm' will prevent the '~' but update 
             //the value to 'm'. Using callback function to replace any new invalid input 
             //with the previous value.  
             setTimeout(delayedReplace, 0, cell.index, previousValue);
-            updateBoardWithHTMLInput();
+            helpers_1.updateBoardWithHTMLInput();
         }
     }
 }
+exports.cellKeyDownEvent = cellKeyDownEvent;
 /** Handles the event of the user pressing the ArrowUp key.
  * Selects the cell one row above or the cell in the bottom row
  * at this col if currently at top row
@@ -87,13 +96,14 @@ function handleArrowUp(row, col) {
     var isTopRow = row == 0;
     if (!isTopRow) {
         //Select cell above
-        cells[convertRowColToCellNo(row - 1, col)].select();
+        constants_1.cells[helpers_1.convertRowColToCellNo(row - 1, col)].select();
     }
     else {
         //Select cell in bottom row at this col
-        cells[convertRowColToCellNo(BOARD_SIZE - 1, col)].select();
+        constants_1.cells[helpers_1.convertRowColToCellNo(constants_1.BOARD_SIZE - 1, col)].select();
     }
 }
+exports.handleArrowUp = handleArrowUp;
 /** Handles the event of the user pressing the ArrowRight key.
  * Selects the cell to the right or the cell at this row and
  * column 0 if currently at right-most column
@@ -101,16 +111,17 @@ function handleArrowUp(row, col) {
  * @param {*} col the col of the cell currently selected
  */
 function handleArrowRight(row, col) {
-    var isRightMostColumn = col == BOARD_SIZE - 1;
+    var isRightMostColumn = col == constants_1.BOARD_SIZE - 1;
     if (!isRightMostColumn) {
         //Select cell to the right
-        cells[convertRowColToCellNo(row, col + 1)].select();
+        constants_1.cells[helpers_1.convertRowColToCellNo(row, col + 1)].select();
     }
     else {
         //Select cell at this row and col 0
-        cells[convertRowColToCellNo(row, 0)].select();
+        constants_1.cells[helpers_1.convertRowColToCellNo(row, 0)].select();
     }
 }
+exports.handleArrowRight = handleArrowRight;
 /** Handles the event of the user pressing the ArrowDown key.
  * Selects the cell one row below or the cell in the top row
  * at this col if currently at bottom row
@@ -118,16 +129,17 @@ function handleArrowRight(row, col) {
  * @param {*} col the col of the cell currently selected
  */
 function handleArrowDown(row, col) {
-    var isBottomRow = row == BOARD_SIZE - 1;
+    var isBottomRow = row == constants_1.BOARD_SIZE - 1;
     if (!isBottomRow) {
         //Select cell below
-        cells[convertRowColToCellNo(row + 1, col)].select();
+        constants_1.cells[helpers_1.convertRowColToCellNo(row + 1, col)].select();
     }
     else {
         //Select top row cell in this column
-        cells[convertRowColToCellNo(0, col)].select();
+        constants_1.cells[helpers_1.convertRowColToCellNo(0, col)].select();
     }
 }
+exports.handleArrowDown = handleArrowDown;
 /** Handles the event of the user pressing the ArrowLeft key.
  * Selects the cell to the left or the cell at this row and
  * column 0 if currently at left-most column
@@ -138,13 +150,14 @@ function handleArrowLeft(row, col) {
     var isLeftMostColumn = col == 0;
     if (!isLeftMostColumn) {
         //Select cell to the left
-        cells[convertRowColToCellNo(row, col - 1)].select();
+        constants_1.cells[helpers_1.convertRowColToCellNo(row, col - 1)].select();
     }
     else {
         //Select cell at this row and last col
-        cells[convertRowColToCellNo(row, BOARD_SIZE - 1)].select();
+        constants_1.cells[helpers_1.convertRowColToCellNo(row, constants_1.BOARD_SIZE - 1)].select();
     }
 }
+exports.handleArrowLeft = handleArrowLeft;
 /**
  * Checks if the inputString is a valid value [1 - 9]
  * @param {*} inputString
@@ -153,9 +166,10 @@ function handleArrowLeft(row, col) {
 function validateInput(inputString) {
     var inputAsNumber = Number.parseInt(inputString);
     var isValidNumber = !!inputAsNumber && inputAsNumber != 0 && inputAsNumber <= 9;
-    logStatus("validate input: " + inputString + " => " + isValidNumber);
+    logging_1.logStatus("validate input: " + inputString + " => " + isValidNumber);
     return isValidNumber;
 }
+exports.validateInput = validateInput;
 /** This function checks the value of a cell with a given cellIndex. If
  * the value is not valid according to the validateInput function, the value
  * is replaced with the previousValue parameter.
@@ -164,19 +178,21 @@ function validateInput(inputString) {
  * @param {*} previousValue The previous value of the cell
  */
 function delayedReplace(cellIndex, previousValue) {
-    var cell = cells[cellIndex];
+    var cell = constants_1.cells[cellIndex];
     var newValue = cell.value;
     if (!validateInput(newValue)) {
         cell.value = previousValue;
-        logStatus("delayedReplace: replacing " + newValue + " with previous value: " + previousValue);
+        logging_1.logStatus("delayedReplace: replacing " + newValue + " with previous value: " + previousValue);
     }
 }
+exports.delayedReplace = delayedReplace;
 function makeBoardReadOnly() {
-    board.forEach(function (row) {
+    main_1.BOARD.forEach(function (row) {
         row.forEach(function (cell) {
-            var htmlCell = getHTMLCellFromCell(cell);
+            var htmlCell = helpers_1.getHTMLCellFromCell(cell);
             htmlCell.disabled = true;
         });
     });
 }
+exports.makeBoardReadOnly = makeBoardReadOnly;
 //# sourceMappingURL=interactivity.js.map
