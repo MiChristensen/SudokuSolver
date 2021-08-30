@@ -2,7 +2,6 @@ import { logStatus } from "./logging";
 
 const DEFAULT_SPEED = getCurrentSpeedSliderValue();
 export let currentSpeed: number = DEFAULT_SPEED
-const speedSlider = document.querySelector("#speedSlider") as HTMLInputElement
 let instantSolve: boolean;
 
 export async function delay() {
@@ -10,6 +9,11 @@ export async function delay() {
     return new Promise(res => {
         setTimeout(res, currentSpeed)
     })
+}
+
+export function setupSpeedSlider() {
+    const speedSlider = document.querySelector("#speedSlider") as HTMLInputElement
+    speedSlider.addEventListener("input", () => setSpeed(getCurrentSpeedSliderValue()))
 }
 
 /**
@@ -33,9 +37,7 @@ export function updateSpeedHTMLValue(newSpeed: number) {
     (document.querySelector("#speedHeader") as HTMLElement).innerHTML = `${prefix} ${newSpeed}`
 }
 
-speedSlider.oninput = () => {
-    setSpeed(getCurrentSpeedSliderValue())
-}
+
 
 function getCurrentSpeedSliderValue() {
     const rangeSlider: HTMLInputElement = getRangeSlider();

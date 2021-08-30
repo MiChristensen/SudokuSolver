@@ -1,12 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeBoardReadOnly = exports.delayedReplace = exports.validateInput = exports.handleArrowLeft = exports.handleArrowDown = exports.handleArrowRight = exports.handleArrowUp = exports.cellKeyDownEvent = exports.cellInputEvent = exports.processHTMLCells = void 0;
+exports.setupSolveButton = exports.makeBoardReadOnly = exports.delayedReplace = exports.validateInput = exports.handleArrowLeft = exports.handleArrowDown = exports.handleArrowRight = exports.handleArrowUp = exports.cellKeyDownEvent = exports.cellInputEvent = exports.setupHTMLCells = exports.setupHTMLElements = void 0;
 var constants_1 = require("./constants");
 var helpers_1 = require("./helpers");
 var logging_1 = require("./logging");
 var main_1 = require("./main");
+var speed_1 = require("./speed");
+function setupHTMLElements() {
+    setupHTMLCells();
+    setupSolveButton();
+    speed_1.setupSpeedSlider();
+}
+exports.setupHTMLElements = setupHTMLElements;
 //Gives every cell an index, a maxlenght = 1 and adds eventlistener.
-function processHTMLCells() {
+function setupHTMLCells() {
     for (var cellCounter = 0; cellCounter < constants_1.cells.length; cellCounter++) {
         var cell = constants_1.cells[cellCounter];
         cell.maxLength = 1;
@@ -15,7 +22,7 @@ function processHTMLCells() {
         cell.index = cellCounter;
     }
 }
-exports.processHTMLCells = processHTMLCells;
+exports.setupHTMLCells = setupHTMLCells;
 function cellInputEvent(event) {
     var cell = event.target;
     var _a = helpers_1.convertCellNoToRowCol(cell.index), row = _a[0], col = _a[1];
@@ -195,4 +202,9 @@ function makeBoardReadOnly() {
     });
 }
 exports.makeBoardReadOnly = makeBoardReadOnly;
+function setupSolveButton() {
+    var solveButton = document.getElementById("solveButton");
+    solveButton.addEventListener("click", main_1.solveClick);
+}
+exports.setupSolveButton = setupSolveButton;
 //# sourceMappingURL=interactivity.js.map

@@ -68,7 +68,7 @@ function main() {
                 [0, 4, 7, 9, 2, 5, 0, 0, 1],
                 [0, 0, 1, 0, 0, 0, 0, 0, 0]
             ];
-            interactivity_1.processHTMLCells();
+            interactivity_1.setupHTMLElements();
             exports.BOARD = helpers_1.initBoard();
             test_1.runTests();
             speed_1.updateSpeedHTMLValue(speed_1.currentSpeed);

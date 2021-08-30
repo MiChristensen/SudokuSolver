@@ -36,11 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateSpeedHTMLValue = exports.updateInstantSolve = exports.delay = exports.currentSpeed = void 0;
+exports.updateSpeedHTMLValue = exports.updateInstantSolve = exports.setupSpeedSlider = exports.delay = exports.currentSpeed = void 0;
 var logging_1 = require("./logging");
 var DEFAULT_SPEED = getCurrentSpeedSliderValue();
 exports.currentSpeed = DEFAULT_SPEED;
-var speedSlider = document.querySelector("#speedSlider");
 var instantSolve;
 function delay() {
     return __awaiter(this, void 0, void 0, function () {
@@ -54,6 +53,11 @@ function delay() {
     });
 }
 exports.delay = delay;
+function setupSpeedSlider() {
+    var speedSlider = document.querySelector("#speedSlider");
+    speedSlider.addEventListener("input", function () { return setSpeed(getCurrentSpeedSliderValue()); });
+}
+exports.setupSpeedSlider = setupSpeedSlider;
 /**
  * Sets the instantSolve variable depending on which "Solve Algorithm Yes/No" radio button is currently checked
  */
@@ -74,9 +78,6 @@ function updateSpeedHTMLValue(newSpeed) {
     document.querySelector("#speedHeader").innerHTML = prefix + " " + newSpeed;
 }
 exports.updateSpeedHTMLValue = updateSpeedHTMLValue;
-speedSlider.oninput = function () {
-    setSpeed(getCurrentSpeedSliderValue());
-};
 function getCurrentSpeedSliderValue() {
     var rangeSlider = getRangeSlider();
     return Number.parseInt(rangeSlider.max) - Number.parseInt(rangeSlider.value);

@@ -310,13 +310,20 @@ exports.setBoardValue = setBoardValue;
 },{"./colors":1,"./constants":2,"./dynamic_styles":3,"./logging":6,"./main":7,"just-clone":10}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeBoardReadOnly = exports.delayedReplace = exports.validateInput = exports.handleArrowLeft = exports.handleArrowDown = exports.handleArrowRight = exports.handleArrowUp = exports.cellKeyDownEvent = exports.cellInputEvent = exports.processHTMLCells = void 0;
+exports.setupSolveButton = exports.makeBoardReadOnly = exports.delayedReplace = exports.validateInput = exports.handleArrowLeft = exports.handleArrowDown = exports.handleArrowRight = exports.handleArrowUp = exports.cellKeyDownEvent = exports.cellInputEvent = exports.setupHTMLCells = exports.setupHTMLElements = void 0;
 var constants_1 = require("./constants");
 var helpers_1 = require("./helpers");
 var logging_1 = require("./logging");
 var main_1 = require("./main");
+var speed_1 = require("./speed");
+function setupHTMLElements() {
+    setupHTMLCells();
+    setupSolveButton();
+    speed_1.setupSpeedSlider();
+}
+exports.setupHTMLElements = setupHTMLElements;
 //Gives every cell an index, a maxlenght = 1 and adds eventlistener.
-function processHTMLCells() {
+function setupHTMLCells() {
     for (var cellCounter = 0; cellCounter < constants_1.cells.length; cellCounter++) {
         var cell = constants_1.cells[cellCounter];
         cell.maxLength = 1;
@@ -325,7 +332,7 @@ function processHTMLCells() {
         cell.index = cellCounter;
     }
 }
-exports.processHTMLCells = processHTMLCells;
+exports.setupHTMLCells = setupHTMLCells;
 function cellInputEvent(event) {
     var cell = event.target;
     var _a = helpers_1.convertCellNoToRowCol(cell.index), row = _a[0], col = _a[1];
@@ -505,8 +512,13 @@ function makeBoardReadOnly() {
     });
 }
 exports.makeBoardReadOnly = makeBoardReadOnly;
+function setupSolveButton() {
+    var solveButton = document.getElementById("solveButton");
+    solveButton.addEventListener("click", main_1.solveClick);
+}
+exports.setupSolveButton = setupSolveButton;
 
-},{"./constants":2,"./helpers":4,"./logging":6,"./main":7}],6:[function(require,module,exports){
+},{"./constants":2,"./helpers":4,"./logging":6,"./main":7,"./speed":8}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.printBoard = exports.logFunctionEnd = exports.logFunctionStart = exports.logStatus = exports.PRINT_INFO = void 0;
@@ -617,7 +629,7 @@ function main() {
                 [0, 4, 7, 9, 2, 5, 0, 0, 1],
                 [0, 0, 1, 0, 0, 0, 0, 0, 0]
             ];
-            interactivity_1.processHTMLCells();
+            interactivity_1.setupHTMLElements();
             exports.BOARD = helpers_1.initBoard();
             test_1.runTests();
             speed_1.updateSpeedHTMLValue(speed_1.currentSpeed);
@@ -818,11 +830,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateSpeedHTMLValue = exports.updateInstantSolve = exports.delay = exports.currentSpeed = void 0;
+exports.updateSpeedHTMLValue = exports.updateInstantSolve = exports.setupSpeedSlider = exports.delay = exports.currentSpeed = void 0;
 var logging_1 = require("./logging");
 var DEFAULT_SPEED = getCurrentSpeedSliderValue();
 exports.currentSpeed = DEFAULT_SPEED;
-var speedSlider = document.querySelector("#speedSlider");
 var instantSolve;
 function delay() {
     return __awaiter(this, void 0, void 0, function () {
@@ -836,6 +847,11 @@ function delay() {
     });
 }
 exports.delay = delay;
+function setupSpeedSlider() {
+    var speedSlider = document.querySelector("#speedSlider");
+    speedSlider.addEventListener("input", function () { return setSpeed(getCurrentSpeedSliderValue()); });
+}
+exports.setupSpeedSlider = setupSpeedSlider;
 /**
  * Sets the instantSolve variable depending on which "Solve Algorithm Yes/No" radio button is currently checked
  */
@@ -856,9 +872,6 @@ function updateSpeedHTMLValue(newSpeed) {
     document.querySelector("#speedHeader").innerHTML = prefix + " " + newSpeed;
 }
 exports.updateSpeedHTMLValue = updateSpeedHTMLValue;
-speedSlider.oninput = function () {
-    setSpeed(getCurrentSpeedSliderValue());
-};
 function getCurrentSpeedSliderValue() {
     var rangeSlider = getRangeSlider();
     return Number.parseInt(rangeSlider.max) - Number.parseInt(rangeSlider.value);

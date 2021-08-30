@@ -9,8 +9,8 @@
     "html:copy": "copyfiles -u 1 src/**.html dist/",
     "css:copy": "copyfiles -u 1 src/**.css dist/",
     "bundlejs": "browserify dist/src/main.js -o dist/bundle.js",
-    "magic": "nodemon --watch dist/src -e js -x \"npm run bundlejs\"",
-    "html:watch": "nodemon --ignore node_modules --ignore dist --watch src -e html, css -x \"npm run html:copy && npm run css:copy\"",
+    "magic": "nodemon --watch dist/src -x \"npm run bundlejs\"",
+    "html:watch": "nodemon --ignore node_modules --ignore dist --watch src -e html,css -x \"npm run html:copy && npm run css:copy\"",
     "start": "concurrently \"npm run html:watch\" \"npm run compile\" \"npm run magic\""
   },
   "author": "",

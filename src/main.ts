@@ -4,7 +4,7 @@ import { SUGOKU_URL, cells } from "./constants";
 import { GREEN_COLOR, GREY_COLOR_FIXED, WHITE_COLOR, YELLOW_COLOR } from "./colors"
 import { printBoard, logStatus } from "./logging";
 import { setVerticalBorders, setHTMLBackgroundsUsingBoard, setCellBackgroundColor } from "./dynamic_styles";
-import { processHTMLCells, makeBoardReadOnly } from "./interactivity";
+import { setupHTMLCells, makeBoardReadOnly, setupHTMLElements } from "./interactivity";
 import { updateSpeedHTMLValue, updateInstantSolve, delay, currentSpeed } from "./speed";
 import clone from "just-clone";
 import { runTests } from "../test/test";
@@ -29,7 +29,7 @@ async function main() {
         [0,4,7,9,2,5,0,0,1],
         [0,0,1,0,0,0,0,0,0]
     ]
-    processHTMLCells();
+    setupHTMLElements();
     BOARD = initBoard();
     runTests();
     updateSpeedHTMLValue(currentSpeed)

@@ -1,10 +1,17 @@
 import { cells, BOARD_SIZE } from "./constants";
 import { convertCellNoToRowCol, updateBoardWithHTMLInput, validateAndColorAllCells, convertRowColToCellNo, getHTMLCellFromCell } from "./helpers";
 import { logStatus } from "./logging";
-import { BOARD } from "./main";
+import { BOARD, solveClick } from "./main";
+import { setupSpeedSlider } from "./speed";
+
+export function setupHTMLElements() {
+    setupHTMLCells();
+    setupSolveButton();
+    setupSpeedSlider();
+}
 
 //Gives every cell an index, a maxlenght = 1 and adds eventlistener.
-export function processHTMLCells() {
+export function setupHTMLCells() {
     for (let cellCounter = 0; cellCounter < cells.length; cellCounter++) {
         const cell = cells[cellCounter]
         cell.maxLength = 1
@@ -195,5 +202,10 @@ export function makeBoardReadOnly(): void {
             htmlCell.disabled = true;
         })
     })
+}
+
+export function setupSolveButton() {
+    const solveButton = document.getElementById("solveButton") as HTMLInputElement;
+    solveButton.addEventListener("click", solveClick)
 }
 
