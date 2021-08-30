@@ -1,0 +1,180 @@
+:root {
+    --buttonBoxShadow: 1px 1px 3px 0px #3b3b3b;
+    --buttonHoverBoxShadow: 1px 1px 3px 1px #3b3b3b;
+    --buttonBorderRadius: 3px;
+    --buttonBackgroundColor: hsl(0, 0%, 94%);
+    --buttonHoverBackgroundColor: hsl(0, 0%, 91%);
+    --focusColor: #bdbdbd;
+    --hoverBrightness: 0.7;
+}
+
+body {
+    background-color: aqua;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bolder;
+    font-size: x-large;
+}
+
+table, td {
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 0;
+    padding: 0;
+    outline: 0;
+}
+
+.endOfBoxRow {
+    border-bottom: 4px solid black;
+    ;
+}
+
+table {
+    border: 6px black solid;
+}
+
+.cell {
+    border: 1px solid black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: x-large;
+    padding: 0;
+    margin: 0;
+    border-radius: 0px;
+    height: 65px;
+    width: 65px;
+    text-align: center;
+    cursor: default;
+    outline: 0;
+}
+
+.cell:disabled {
+    color:initial;
+    -webkit-appearance: none;
+    outline: none;
+}
+
+.cell:focus {
+    outline: none;
+    filter: brightness(var(--hoverBrightness));
+    caret-color: transparent;
+}
+
+.cell::selection {
+    color: inherit;
+}
+
+.cell::-moz-selection {
+    color: inherit;
+}
+
+#solveButton {
+    display: inline-block;
+}
+
+header {
+    margin: 2% 0% 0% 5%;
+}
+
+#game {
+    padding: 2%;
+    display: flex;
+    align-items: center;
+    margin: 2% 5%;
+    box-shadow: 1px 1px 3px 2px #3b3b3b;
+    background-color: #993d00;
+    background-image: url("resources/wood-pattern.png")
+    /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
+}
+
+#speedBtnContainer {
+    display: inline-block;
+}
+
+#infoSection {
+    text-align: center;
+    border: 1px solid black;
+    box-shadow: var(--buttonBoxShadow);
+    background-color: #F8F8F8;
+    border-radius: 20px;
+    margin-right: 4%;
+    width: 15%;
+}
+
+#speedHeader {
+    margin: 0.8rem 0rem;
+    padding: 0.8rem;
+}
+
+#radioContainer {
+    margin: 0.8rem 0rem;
+    padding: 0.8rem;
+}
+
+#radioContainer p {
+    margin: none;
+}
+
+#solveButton {
+    margin: 0rem 0rem 1rem 0rem;
+    width: 10ch;
+    cursor: pointer;
+    font-size: larger;
+    font-weight: bold;
+    background-color: var(--buttonBackgroundColor);
+    box-shadow: var(--buttonBoxShadow);
+    border-radius: 10px
+}
+
+#solveButton:hover:enabled {
+    box-shadow: var(--buttonHoverBoxShadow);
+    transform: scale(1.01);
+    background-color: var(--buttonHoverBackgroundColor);
+    transition: ease 100ms;
+}
+
+#solveButton:disabled {
+    filter: brightness(0.9);
+    opacity: 0.8;
+    border-style: inherit;
+}
+
+#speedSlider {
+    -webkit-appearance: none;
+    outline: none;
+    width: 180px;
+    height: 4px;
+    border-radius: 100px;
+    background: #158789;
+    border-radius: 100px;
+}
+
+#speedSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 20px;
+    width: 25px;
+    border: 1px solid #000000;
+    background-color: #158789;
+    border-radius: 100px;
+    transition: transform 0.1s ease;
+    box-shadow: var(--buttonBoxShadow);
+    cursor: pointer;
+}
+
+#speedSlider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+#speedSlider:disabled, #speedSlider:disabled::-webkit-slider-thumb {
+    background: #dddddd;
+}
+
+#speedSlider:disabled::-webkit-slider-thumb:hover {
+    transform: none;
+}
+
+/* Hide up/dowwn arrows for number input fields */
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

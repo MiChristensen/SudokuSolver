@@ -1,0 +1,6 @@
+export const GREEN_COLOR = "#8cf91f"
+export const RED_COLOR = "#e63946"
+export const GREY_COLOR_FIXED = "#828282"
+export const GREY_COLOR_FOCUS = "bdbdbd"
+export const YELLOW_COLOR = "#ffff33"
+export const WHITE_COLOR = "white"
