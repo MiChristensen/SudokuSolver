@@ -25,11 +25,10 @@ table, td {
 
 .endOfBoxRow {
     border-bottom: 4px solid black;
-    ;
 }
 
 table {
-    border: 6px black solid;
+    border: 4px black solid;
 }
 
 .cell {

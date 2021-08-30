@@ -1,13 +1,14 @@
 import { cells, BOARD_SIZE } from "./constants";
 import { convertCellNoToRowCol, updateBoardWithHTMLInput, validateAndColorAllCells, convertRowColToCellNo, getHTMLCellFromCell } from "./helpers";
 import { logStatus } from "./logging";
-import { BOARD, solveClick } from "./main";
+import { BOARD, showSolution, solveClick } from "./main";
 import { setupSpeedSlider } from "./speed";
 
 export function setupHTMLElements() {
     setupHTMLCells();
     setupSolveButton();
     setupSpeedSlider();
+    setupSolutionButtons();
 }
 
 //Gives every cell an index, a maxlenght = 1 and adds eventlistener.
@@ -204,8 +205,17 @@ export function makeBoardReadOnly(): void {
     })
 }
 
-export function setupSolveButton() {
+function setupSolveButton() {
     const solveButton = document.getElementById("solveButton") as HTMLInputElement;
     solveButton.addEventListener("click", solveClick)
+}
+
+function setupSolutionButtons() {
+    const prevSolutionButton = document.querySelector("#prevSolutionButton") as HTMLInputElement;
+    const nextSolutionButton = document.querySelector("#nextSolutionButton") as HTMLInputElement;
+
+    //TASK prev/next btns skal cycle solutions
+    prevSolutionButton.addEventListener("click", () => showSolution(0))
+    nextSolutionButton.addEventListener("click", () => showSolution(1))
 }
 

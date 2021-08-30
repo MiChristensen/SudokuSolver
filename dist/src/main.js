@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.solveClick = exports.fillHTMLWithPreset = exports.BOARD = void 0;
+exports.showSolution = exports.solveClick = exports.fillHTMLWithPreset = exports.BOARD = void 0;
 //#region imports
 var helpers_1 = require("./helpers");
 var constants_1 = require("./constants");
@@ -215,6 +215,7 @@ function showDoneAnimation() {
 function showSolution(solutionIndex) {
     helpers_1.updateHTMLWithBoard(solutions[solutionIndex]);
 }
+exports.showSolution = showSolution;
 window.onload = main;
 //TASK Vis antal løsninger der er fundet 
 //TASK Fix speed - skal ikke vise værdien og skal bruge en funktion der accelererer hurtigere

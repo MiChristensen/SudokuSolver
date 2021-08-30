@@ -159,7 +159,7 @@ function showDoneAnimation() {
     //TODO Vis, at algoritmen er færdig. Eventuelt tæl antal løsninger
 }
 
-function showSolution(solutionIndex: number) {
+export function showSolution(solutionIndex: number) {
     updateHTMLWithBoard(solutions[solutionIndex])
 }
 

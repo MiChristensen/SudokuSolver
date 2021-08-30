@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setupSolveButton = exports.makeBoardReadOnly = exports.delayedReplace = exports.validateInput = exports.handleArrowLeft = exports.handleArrowDown = exports.handleArrowRight = exports.handleArrowUp = exports.cellKeyDownEvent = exports.cellInputEvent = exports.setupHTMLCells = exports.setupHTMLElements = void 0;
+exports.makeBoardReadOnly = exports.delayedReplace = exports.validateInput = exports.handleArrowLeft = exports.handleArrowDown = exports.handleArrowRight = exports.handleArrowUp = exports.cellKeyDownEvent = exports.cellInputEvent = exports.setupHTMLCells = exports.setupHTMLElements = void 0;
 var constants_1 = require("./constants");
 var helpers_1 = require("./helpers");
 var logging_1 = require("./logging");
@@ -10,6 +10,7 @@ function setupHTMLElements() {
     setupHTMLCells();
     setupSolveButton();
     speed_1.setupSpeedSlider();
+    setupSolutionButtons();
 }
 exports.setupHTMLElements = setupHTMLElements;
 //Gives every cell an index, a maxlenght = 1 and adds eventlistener.
@@ -206,5 +207,11 @@ function setupSolveButton() {
     var solveButton = document.getElementById("solveButton");
     solveButton.addEventListener("click", main_1.solveClick);
 }
-exports.setupSolveButton = setupSolveButton;
+function setupSolutionButtons() {
+    var prevSolutionButton = document.querySelector("#prevSolutionButton");
+    var nextSolutionButton = document.querySelector("#nextSolutionButton");
+    //TASK prev/next btns skal cycle solutions
+    prevSolutionButton.addEventListener("click", function () { return main_1.showSolution(0); });
+    nextSolutionButton.addEventListener("click", function () { return main_1.showSolution(1); });
+}
 //# sourceMappingURL=interactivity.js.map
