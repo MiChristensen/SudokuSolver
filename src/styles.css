@@ -82,7 +82,7 @@ header {
     margin: 2% 5%;
     box-shadow: 1px 1px 3px 2px #3b3b3b;
     background-color: #993d00;
-    background-image: url("resources/wood-pattern.png")
+    background-image: url("./../dist/resources/wood-pattern.png")
     /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
 }
 

@@ -64,7 +64,7 @@ export function fillHTMLWithPreset(preset: number[][]) {
     }
 }
 
-function solveClick() {
+export function solveClick() {
     //TASK disable solve when solving
     updateBoardWithHTMLInput();
     printBoard(BOARD);

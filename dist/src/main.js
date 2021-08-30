@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fillHTMLWithPreset = exports.BOARD = void 0;
+exports.solveClick = exports.fillHTMLWithPreset = exports.BOARD = void 0;
 //#region imports
 var helpers_1 = require("./helpers");
 var constants_1 = require("./constants");
@@ -116,6 +116,7 @@ function solveClick() {
     logging_1.logStatus("Solving...");
     startSolve();
 }
+exports.solveClick = solveClick;
 //Starts the actual algorithm solving the sudoku
 function startSolve() {
     recursiveValidate(0, 0, 1).then(function () {
