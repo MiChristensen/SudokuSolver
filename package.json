@@ -8,10 +8,12 @@
     "compile": "tsc --w",
     "html:copy": "copyfiles -u 1 src/**.html dist/",
     "css:copy": "copyfiles -u 1 src/**.css dist/",
-    "bundlejs": "browserify dist/src/main.js -o dist/bundle.js",
-    "magic": "nodemon --watch dist/src -x \"npm run bundlejs\"",
+    "resources:copy": "copyfiles -u 1 src/resources/* dist/",
+    "bundlejs": "browserify dist/scripts/src/main.js -o dist/bundle.js",
+    "magic": "nodemon --watch dist/scripts/ -x \"npm run bundlejs\"",
     "html:watch": "nodemon --ignore node_modules --ignore dist --watch src -e html,css -x \"npm run html:copy && npm run css:copy\"",
-    "start": "concurrently \"npm run html:watch\" \"npm run compile\" \"npm run magic\""
+    "resources:watch": "nodemon --ignore node_modules --ignore dist --watch src/resources -e * -x \"npm run resources:copy\"",
+    "start": "concurrently \"npm run html:watch\" \"npm run resources:watch\" \"npm run compile\" \"npm run magic\""
   },
   "author": "",
   "license": "ISC",

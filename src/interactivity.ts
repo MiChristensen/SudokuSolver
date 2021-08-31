@@ -1,7 +1,7 @@
-import { cells, BOARD_SIZE } from "./constants";
+import { cells, BOARD_SIZE, SUGOKU_URL } from "./constants";
 import { convertCellNoToRowCol, updateBoardWithHTMLInput, validateAndColorAllCells, convertRowColToCellNo, getHTMLCellFromCell } from "./helpers";
 import { logStatus } from "./logging";
-import { BOARD, showSolution, solveClick } from "./main";
+import { BOARD, fetchSugokuBoardAsync, fillHTMLWithPreset, showSolution, solveClick } from "./main";
 import { setupSpeedSlider } from "./speed";
 
 export function setupHTMLElements() {
@@ -9,6 +9,7 @@ export function setupHTMLElements() {
     setupSolveButton();
     setupSpeedSlider();
     setupSolutionButtons();
+    setupGenerateButtons();
 }
 
 //Gives every cell an index, a maxlenght = 1 and adds eventlistener.
@@ -173,7 +174,7 @@ export function handleArrowLeft(row: number, col: number) {
  * @param {*} inputString 
  * @returns 
  */
- export function validateInput(inputString: string) {
+export function validateInput(inputString: string) {
     const inputAsNumber = Number.parseInt(inputString)
     const isValidNumber = !!inputAsNumber && inputAsNumber != 0 && inputAsNumber <= 9
     logStatus(`validate input: ${inputString} => ${isValidNumber}`);
@@ -187,7 +188,7 @@ export function handleArrowLeft(row: number, col: number) {
  * @param {*} cellIndex The index of the cell in question
  * @param {*} previousValue The previous value of the cell
  */
- export function delayedReplace(cellIndex: number, previousValue: any) {
+export function delayedReplace(cellIndex: number, previousValue: any) {
     const cell = cells[cellIndex]
     const newValue = cell.value;
     if (!validateInput(newValue)) {
@@ -217,5 +218,38 @@ function setupSolutionButtons() {
     //TASK prev/next btns skal cycle solutions
     prevSolutionButton.addEventListener("click", () => showSolution(0))
     nextSolutionButton.addEventListener("click", () => showSolution(1))
+}
+
+function setupGenerateButtons() {
+    const generateButton = document.querySelector("#generateButton") as HTMLButtonElement;
+    generateButton.addEventListener("click", generateClick)
+
+    // const mediumButton = document.querySelector("#mediumButton") as HTMLButtonElement;
+    // mediumButton.addEventListener("click", async () => fillHTMLWithPreset(await fetchSugokuBoardAsync(Difficulty.MEDIUM)))
+
+    // const hardButton = document.querySelector("#hardButton") as HTMLButtonElement;
+    // hardButton.addEventListener("click", async () => fillHTMLWithPreset(await fetchSugokuBoardAsync(Difficulty.HARD)))
+
+    // const randomButton = document.querySelector("#randomButton") as HTMLButtonElement;
+    // randomButton.addEventListener("click", async () => fillHTMLWithPreset(await fetchSugokuBoardAsync(Difficulty.RANDOM)))
+
+}
+
+function generateClick() {
+    const radio = document.querySelector("#difficultyRadioContainer");
+    
+    //Read selected difficulty
+    let difficulty = null;
+    if ((radio?.children.namedItem("easyRadio") as HTMLInputElement).checked) difficulty = Difficulty.EASY;
+    else if ((radio?.children.namedItem("mediumRadio") as HTMLInputElement).checked) difficulty = Difficulty.MEDIUM;
+    else if ((radio?.children.namedItem("hardRadio") as HTMLInputElement).checked) difficulty = Difficulty.HARD;
+    else if ((radio?.children.namedItem("randomRadio") as HTMLInputElement).checked) difficulty = Difficulty.RANDOM;
+    if(!difficulty) {
+        alert("Select a difficulty first");
+        return;
+    }
+
+    //Get generated board and fill into HTML
+    fetchSugokuBoardAsync(difficulty).then( x => fillHTMLWithPreset(x));
 }
 

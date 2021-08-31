@@ -39,7 +39,7 @@ async function main() {
     updateBoardWithHTMLInput();
 }
 
-async function fetchSugokuBoardAsync(difficulty: Difficulty) {
+export async function fetchSugokuBoardAsync(difficulty: Difficulty) {
     return window.fetch(`${SUGOKU_URL}?difficulty=${difficulty}`)
         .then(response => response.json())
         .then(jsonObject => {

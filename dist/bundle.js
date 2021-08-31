@@ -321,6 +321,7 @@ function setupHTMLElements() {
     setupSolveButton();
     speed_1.setupSpeedSlider();
     setupSolutionButtons();
+    setupGenerateButtons();
 }
 exports.setupHTMLElements = setupHTMLElements;
 //Gives every cell an index, a maxlenght = 1 and adds eventlistener.
@@ -524,6 +525,35 @@ function setupSolutionButtons() {
     prevSolutionButton.addEventListener("click", function () { return main_1.showSolution(0); });
     nextSolutionButton.addEventListener("click", function () { return main_1.showSolution(1); });
 }
+function setupGenerateButtons() {
+    var generateButton = document.querySelector("#generateButton");
+    generateButton.addEventListener("click", generateClick);
+    // const mediumButton = document.querySelector("#mediumButton") as HTMLButtonElement;
+    // mediumButton.addEventListener("click", async () => fillHTMLWithPreset(await fetchSugokuBoardAsync(Difficulty.MEDIUM)))
+    // const hardButton = document.querySelector("#hardButton") as HTMLButtonElement;
+    // hardButton.addEventListener("click", async () => fillHTMLWithPreset(await fetchSugokuBoardAsync(Difficulty.HARD)))
+    // const randomButton = document.querySelector("#randomButton") as HTMLButtonElement;
+    // randomButton.addEventListener("click", async () => fillHTMLWithPreset(await fetchSugokuBoardAsync(Difficulty.RANDOM)))
+}
+function generateClick() {
+    var radio = document.querySelector("#difficultyRadioContainer");
+    //Read selected difficulty
+    var difficulty = null;
+    if ((radio === null || radio === void 0 ? void 0 : radio.children.namedItem("easyRadio")).checked)
+        difficulty = "easy" /* EASY */;
+    else if ((radio === null || radio === void 0 ? void 0 : radio.children.namedItem("mediumRadio")).checked)
+        difficulty = "medium" /* MEDIUM */;
+    else if ((radio === null || radio === void 0 ? void 0 : radio.children.namedItem("hardRadio")).checked)
+        difficulty = "hard" /* HARD */;
+    else if ((radio === null || radio === void 0 ? void 0 : radio.children.namedItem("randomRadio")).checked)
+        difficulty = "random" /* RANDOM */;
+    if (!difficulty) {
+        alert("Select a difficulty first");
+        return;
+    }
+    //Get generated board and fill into HTML
+    main_1.fetchSugokuBoardAsync(difficulty).then(function (x) { return main_1.fillHTMLWithPreset(x); });
+}
 
 },{"./constants":2,"./helpers":4,"./logging":6,"./main":7,"./speed":8}],6:[function(require,module,exports){
 "use strict";
@@ -607,7 +637,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.showSolution = exports.solveClick = exports.fillHTMLWithPreset = exports.BOARD = void 0;
+exports.showSolution = exports.solveClick = exports.fillHTMLWithPreset = exports.fetchSugokuBoardAsync = exports.BOARD = void 0;
 //#region imports
 var helpers_1 = require("./helpers");
 var constants_1 = require("./constants");
@@ -660,6 +690,7 @@ function fetchSugokuBoardAsync(difficulty) {
         });
     });
 }
+exports.fetchSugokuBoardAsync = fetchSugokuBoardAsync;
 /**
  * Uses the values in preset variable to fill innerHTML values in cells variable
  * @param preset the number[][] preset

@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <script src="bundle.js" defer></script>
     <link rel="stylesheet" href="./styles.css">
-
+    <script src="https://kit.fontawesome.com/230ed98720.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
     <title>Sudoku Solver</title>
 </head>
 
@@ -18,7 +19,7 @@
             <h2 id="speedHeader"> </h2>
             <input type="range" min=0 max=1000 value=0 id="speedSlider">
 
-            <div id="radioContainer">
+            <div id="showAlgorithmRadioContainer">
                 <p>Show Algorithm?</p>
                 <input type="radio" id="doShowAlgorithm" name="showAlgorithmRadio" value="doShow" checked="true">
                 <label for="doShowAlgorithm">Yes</label>
@@ -147,11 +148,33 @@
 
         </div>
 
-        <div id="buttonContainer"> 
-            <!-- TASK tilføj pil-ikoner til knapper  -->
-            <input type="button" id="prevSolutionButton" value="&lt -- ">
-            <input type="button" id="nextSolutionButton" value="-- &gt"> 
+        <!-- TASK Style hele containerenthis -->
+        <div id="buttonContainer">
+            <p> Solution cycle </p>
+            <button id="prevSolutionButton"><i class="fas fa-arrow-left"></i></button>
+            <button id="nextSolutionButton"><i class="fas fa-arrow-right"></i></button>
+            <br>
+            <p> Generate sudoku </p>
+
+            <div id="difficultyRadioContainer">
+                <p>Select difficulty</p>
+                <input type="radio" id="easyRadio" name="difficultyRadio" value="easy" checked="true">
+                <label for="easyRadio"> Easy </label>
+
+                <input type="radio" id="mediumRadio" name="difficultyRadio" value="medium">
+                <label for="mediumRadio"> Medium </label>
+
+                <input type="radio" id="hardRadio" name="difficultyRadio" value="hard">
+                <label for="hardRadio"> Hard </label>
+
+                <input type="radio" id="randomRadio" name="difficultyRadio" value="random">
+                <label for="randomRadio"> Random </label>
+            </div>
+            <button id="generateButton"> Generate </button>
+            <!-- TASK Logik til clear button -->
+            <button id="clearButton"> Clear </button>
         </div>
+    </div>
 
     </div>
     <script>var exports = {};</script>

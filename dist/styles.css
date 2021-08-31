@@ -67,7 +67,7 @@ table {
 }
 
 #solveButton {
-    display: inline-block;
+    /* display: inline-block; */
 }
 
 header {
@@ -96,7 +96,7 @@ header {
     background-color: #F8F8F8;
     border-radius: 20px;
     margin-right: 4%;
-    width: 15%;
+    width: fit-content;
 }
 
 #speedHeader {
@@ -104,12 +104,12 @@ header {
     padding: 0.8rem;
 }
 
-#radioContainer {
+#showAlgorithmRadioContainer {
     margin: 0.8rem 0rem;
     padding: 0.8rem;
 }
 
-#radioContainer p {
+#showAlgorithmRadioContainer p {
     margin: none;
 }
 
@@ -176,4 +176,16 @@ header {
 input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+
+
+#buttonContainer {
+    text-align: center;
+    border: 2px solid black;
+    box-shadow: var(--buttonBoxShadow);
+    background-color: #F8F8F8;
+    border-radius: 20px;
+    margin: 0 0 30% 4%;
+    padding: 0 2%;
+    width: fit-content;
 }
